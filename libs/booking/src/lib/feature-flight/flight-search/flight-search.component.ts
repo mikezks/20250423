@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FlightService } from '../../api-boarding';
 import { Flight, FlightFilter } from '../../logic-flight';
@@ -20,6 +20,7 @@ import { SIGNAL } from '@angular/core/primitives/signals';
 })
 export class FlightSearchComponent {
   private flightService = inject(FlightService);
+  // private cdRef = inject(ChangeDetectorRef);
 
   protected filter = signal({
     from: 'London',
@@ -38,7 +39,30 @@ export class FlightSearchComponent {
   constructor() {
     effect(() => this.logRoute());
 
-    effect(() => this.search());
+    effect(() => {
+      this.filter();
+      untracked(() => this.search());
+    });
+
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Barcelona' }));
+    console.log(this.filter().from);
+    // this.cdRef.detectChanges();
+    this.filter.update(curr => ({ ...curr, from: 'Athens' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Madrid' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Oslo' }));
+    console.log(this.filter().from);
+
+    const counter = signal(0);
+    const isEven = computed(() => counter() % 2 === 0);
+    effect(() => console.log({
+      counter: counter(),
+      isEven: isEven()
+    }));
+
+    counter.update(curr => curr++);
   }
 
   logRoute(): void {
