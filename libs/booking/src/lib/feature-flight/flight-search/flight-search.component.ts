@@ -36,20 +36,16 @@ export class FlightSearchComponent {
   protected flights: Flight[] = [];
 
   constructor() {
-    let activeConsumer = effect(() => {
-      this.logRoute();
-    });
+    effect(() => this.logRoute());
 
-    console.log(this.route[SIGNAL]);
+    effect(() => this.search());
   }
 
   logRoute(): void {
     console.log(this.route());
   }
 
-  protected search(filter: FlightFilter): void {
-    this.filter.set(filter);
-
+  protected search(): void {
     if (!this.filter().from || !this.filter().to) {
       return;
     }

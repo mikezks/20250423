@@ -52,13 +52,13 @@ export class FlightCardComponent {
 
   readonly item = input.required<Flight>();
   readonly selected = model(false);
-  delayTrigger = output<Flight>();
+  itemChange = output<Flight>();
 
   toggleSelection(): void {
     this.selected.update(curr => !curr);
   }
 
   delay(): void {
-    this.delayTrigger.emit(this.item());
+    this.itemChange.emit(this.item());
   }
 }
