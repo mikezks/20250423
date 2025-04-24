@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FlightService } from '../../api-boarding';
 import { Flight, FlightFilter } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
+import { SIGNAL } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -35,9 +36,11 @@ export class FlightSearchComponent {
   protected flights: Flight[] = [];
 
   constructor() {
-    effect(() => {
+    let activeConsumer = effect(() => {
       this.logRoute();
     });
+
+    console.log(this.route[SIGNAL]);
   }
 
   logRoute(): void {
