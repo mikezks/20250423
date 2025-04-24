@@ -29,6 +29,15 @@ export const APP_ROUTES: Routes = [
     path: 'miles',
     loadComponent: () => loadRemoteModule('miles', './Component')
   },
+  /* {
+    path: 'depature',
+    component: MultiVersionWrapperComponent,
+    data: {
+      mfe: 'departure',
+      exposed: './bootstrap',
+      customElementName: 'mfe-departure'
+    }
+  }, */
   {
     path: '**',
     redirectTo: 'home'
