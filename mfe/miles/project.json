@@ -1,22 +1,20 @@
 {
-  "name": "shell",
+  "name": "miles",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/shell/src",
-  "tags": [
-    "domain:shell"
-  ],
+  "sourceRoot": "mfe/miles/src",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-architects/native-federation:build",
       "options": {},
       "configurations": {
         "production": {
-          "target": "shell:esbuild:production"
+          "target": "miles:esbuild:production"
         },
         "development": {
-          "target": "shell:esbuild:development",
+          "target": "miles:esbuild:development",
           "dev": true
         }
       },
@@ -25,7 +23,7 @@
     "serve": {
       "executor": "@angular-architects/native-federation:build",
       "options": {
-        "target": "shell:serve-original:development",
+        "target": "miles:serve-original:development",
         "rebuildDelay": 0,
         "dev": true,
         "port": 0
@@ -34,7 +32,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "buildTarget": "shell:build"
+        "buildTarget": "miles:build"
       }
     },
     "lint": {
@@ -46,15 +44,15 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "apps/shell/jest.config.ts"
+        "jestConfig": "mfe/miles/jest.config.ts"
       }
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "shell:build",
+        "buildTarget": "miles:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/shell/browser",
+        "staticFilePath": "dist/mfe/miles/browser",
         "spa": true
       }
     },
@@ -64,25 +62,23 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/apps/shell",
-        "index": "apps/shell/src/index.html",
-        "browser": "apps/shell/src/main.ts",
+        "outputPath": "dist/mfe/miles",
+        "index": "mfe/miles/src/index.html",
+        "browser": "mfe/miles/src/main.ts",
         "polyfills": [
           "zone.js",
           "es-module-shims"
         ],
-        "tsConfig": "apps/shell/tsconfig.app.json",
+        "tsConfig": "mfe/miles/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/shell/public"
+            "input": "mfe/miles/public"
           }
         ],
         "styles": [
-          "@angular/material/prebuilt-themes/indigo-pink.css",
-          "@angular-architects/paper-design/assets/css/bootstrap.css",
-          "apps/shell/src/styles.scss"
+          "mfe/miles/src/styles.scss"
         ],
         "scripts": []
       },
@@ -114,15 +110,15 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "shell:esbuild:production"
+          "buildTarget": "miles:esbuild:production"
         },
         "development": {
-          "buildTarget": "shell:esbuild:development"
+          "buildTarget": "miles:esbuild:development"
         }
       },
       "defaultConfiguration": "development",
       "options": {
-        "port": 4200
+        "port": 4202
       }
     }
   }
