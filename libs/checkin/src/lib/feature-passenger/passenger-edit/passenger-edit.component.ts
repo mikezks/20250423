@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { PassengerService } from '../../logic-passenger/data-access/passenger.service';
 import { validatePassengerStatus } from '../../util-validation';
 import { httpResource } from '@angular/common/http';
+import { initialPassenger } from '../../logic-passenger';
 
 
 @Component({
@@ -20,8 +21,12 @@ export class PassengerEditComponent {
   private passengerService = inject(PassengerService);
 
   id = input(0, { transform: numberAttribute });
-  passengerResource = httpResource(
-    () => `https://demo.angulararchitects.io/api/passenger?id=${ this.id() }`
+  passengerResource = httpResource(() => ({
+      url: 'https://demo.angulararchitects.io/api/passenger',
+      params: {
+        id: this.id()
+      }
+    }), { defaultValue: initialPassenger }
   );
 
   protected editForm = inject(NonNullableFormBuilder).group({
