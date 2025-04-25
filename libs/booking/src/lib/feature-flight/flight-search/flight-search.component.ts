@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FlightService } from '../../api-boarding';
 import { Flight, FlightFilter } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
+import { SIGNAL } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -19,27 +20,62 @@ import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 })
 export class FlightSearchComponent {
   private flightService = inject(FlightService);
+  // private cdRef = inject(ChangeDetectorRef);
 
-  protected filter = {
+  protected filter = signal({
     from: 'London',
     to: 'New York',
     urgent: false
-  };
+  });
+  protected route = computed(
+    () => 'From ' + this.filter().from + ' to ' + this.filter().to + '.'
+  );
   protected basket: Record<number, boolean> = {
     3: true,
     5: true
   };
   protected flights: Flight[] = [];
 
-  protected search(filter: FlightFilter): void {
-    this.filter = filter;
+  constructor() {
+    effect(() => this.logRoute());
 
-    if (!this.filter.from || !this.filter.to) {
+    effect(() => {
+      this.filter();
+      untracked(() => this.search());
+    });
+
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Barcelona' }));
+    console.log(this.filter().from);
+    // this.cdRef.detectChanges();
+    this.filter.update(curr => ({ ...curr, from: 'Athens' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Madrid' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Oslo' }));
+    console.log(this.filter().from);
+
+    const counter = signal(0);
+    const isEven = computed(() => counter() % 2 === 0);
+    effect(() => console.log({
+      counter: counter(),
+      isEven: isEven()
+    }));
+
+    counter.update(curr => curr++);
+  }
+
+  logRoute(): void {
+    console.log(this.route());
+  }
+
+  protected search(): void {
+    if (!this.filter().from || !this.filter().to) {
       return;
     }
 
     this.flightService.find(
-      this.filter.from, this.filter.to, this.filter.urgent
+      this.filter().from, this.filter().to, this.filter().urgent
     ).subscribe(
       flights => this.flights = flights
     );
